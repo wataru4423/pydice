@@ -9,7 +9,7 @@ dependencies = [
 ]
 
 [project.scripts]
-pydice = "pydice:main"
+pydice = "pydice.main:app"
 
 [build-system]
 requires = ["hatchling"]
