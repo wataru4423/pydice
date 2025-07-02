@@ -14,7 +14,7 @@ def main(
     pairs: Annotated[
         int, typer.Option(min=1, max=100, help="Number of dice to roll")
     ] = 1,
-    weight: bool = False,
+    weight: Annotated[bool, typer.Option(help="Weighted dice")] = False,
 ):
     """Dice roll application.\n
     Default: to roll a 6-sided dice.\n
