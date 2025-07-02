@@ -20,7 +20,7 @@ def main(
     """Dice roll application.\n
     Default: to roll a 6-sided dice and return sum value.\n
     If --weight is set, last number will be weighted to 3.\n
-    If --each is set, each die value will be returned instead of the sum.
+    If --each is set, each die value will be returned instead of the sum value.
     """
 
     def roll(bones, pairs, weight):
