@@ -23,22 +23,23 @@ def main(
     If --each is set, each die value will be returned instead of the sum value.
     """
 
-    def roll(bones, pairs, weight):
-        """
-        dice roll function
-        """
-        die = list(range(1, bones + 1))
-        if weight:
-            weights = [1] * bones
-            weights[-1] = 3
-            dice = random.choices(die, k=pairs, weights=weights)
-        else:
-            dice = random.choices(die, k=pairs)
-
-        return dice
-
     rolls = roll(bones, pairs, weight)
     if each:
         print(*rolls, sep=", ")
     else:
         print(sum(rolls))
+
+
+def roll(bones, pairs, weight):
+    """
+    dice roll function
+    """
+    die = list(range(1, bones + 1))
+    if weight:
+        weights = [1] * bones
+        weights[-1] = 3
+        dice = random.choices(die, k=pairs, weights=weights)
+    else:
+        dice = random.choices(die, k=pairs)
+
+    return dice
