@@ -30,7 +30,7 @@ def main(
         print(sum(rolls))
 
 
-def roll(bones, pairs, weight):
+def roll(bones: int, pairs: int, weight: bool) -> list[int]:
     """
     dice roll function
     """
