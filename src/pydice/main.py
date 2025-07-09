@@ -28,8 +28,10 @@ def main(
     if not re.fullmatch(r"(\d{1,2}|100)[d](\d{1,3}|1000)", dice):
         print("Invalid dice format. Please use the format like 2d6.")
         raise typer.Exit(code=1)
-
-    pairs, bones = map(int, dice.split("d"))
+    elif dice == "1d6":
+        pass
+    else:
+        pairs, bones = map(int, dice.split("d"))
 
     rolls = roll(bones, pairs, weight)
     if each:
