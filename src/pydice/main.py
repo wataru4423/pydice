@@ -10,17 +10,14 @@ app = typer.Typer()
 @app.command()
 def main(
     dice: Annotated[str, typer.Argument(help="Dice to roll, e.g. 2d6")] = "1d6",
-    bones: Annotated[
-        int, typer.Option(min=1, max=1000, help="Number of sides on the dice")
-    ] = 6,
-    pairs: Annotated[
-        int, typer.Option(min=1, max=100, help="Number of dice to roll")
-    ] = 1,
     weight: Annotated[bool, typer.Option(help="Weighted dice")] = False,
     each: Annotated[bool, typer.Option(help="Return each die value")] = False,
 ):
     """Dice roll application.\n
     Default: to roll a 6-sided dice and return sum value.\n
+    Max: 100d1000.\n
+    First number: Number of dice.\n
+    Second number: Number of sides.\n
     If --weight is set, last number will be weighted to 3.\n
     If --each is set, each die value will be returned instead of the sum value.
     """
@@ -29,11 +26,7 @@ def main(
         print("Invalid dice format. Please use the format like 2d6.")
         raise typer.Exit(code=1)
     else:
-        if pairs != dice[0] or bones != dice[-1]:
-            print("Invalid option")
-            raise typer.Exit(code=1)
-        else:
-            pairs, bones = map(int, dice.split("d"))
+        pairs, bones = map(int, dice.split("d"))
 
     rolls = roll(bones, pairs, weight)
     if each:
