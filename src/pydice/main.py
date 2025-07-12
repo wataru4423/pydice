@@ -22,20 +22,20 @@ def main(
     If --each is set, each die value will be returned instead of the sum value.
     """
 
-    if not re.fullmatch(r"(\d{1,2}|100)[d](\d{1,3}|1000)", dice):
+    if not re.fullmatch(r"([1-9]\d?|100)[d]([1-9]\d{0,2}|1000)", dice):
         print("Invalid dice format. Please use the format like 2d6.")
         raise typer.Exit(code=1)
     else:
         pairs, bones = map(int, dice.split("d"))
 
-    rolls = roll(bones, pairs, weight)
+    rolls = roll(pairs, bones, weight)
     if each:
         print(*rolls, sep=", ")
     else:
         print(sum(rolls))
 
 
-def roll(bones: int, pairs: int, weight: bool) -> list[int]:
+def roll(pairs: int, bones: int, weight: bool) -> list[int]:
     """
     dice roll function
     """
