@@ -18,11 +18,52 @@ def test_main_stdout():
     assert result.stdout == "1\n"
 
 
+def test_corner_case_0d0():
+    result = runner.invoke(app, ["0d0"])
+    assert result.exit_code == 1
+
+
+def test_corner_case_0d1():
+    result = runner.invoke(app, ["0d1"])
+    assert result.exit_code == 1
+
+
+def test_corner_case_1d0():
+    result = runner.invoke(app, ["1d0"])
+    assert result.exit_code == 1
+
+
+def test_corner_case_101d6():
+    result = runner.invoke(app, ["101d6"])
+    assert result.exit_code == 1
+
+
+def test_corner_case_100d6():
+    result = runner.invoke(app, ["100d6"])
+    assert result.exit_code == 0
+
+
+def test_corner_case_1d1001():
+    result = runner.invoke(app, ["1d1001"])
+    assert result.exit_code == 1
+
+
+def test_corner_case_1d1000():
+    result = runner.invoke(app, ["1d1000"])
+    assert result.exit_code == 0
+
+
 def test_dice_format_error_message():
     """Tests error message when dice format is invalid."""
     result = runner.invoke(app, ["0d6"])
     assert result.exit_code == 1
     assert result.stdout == "Invalid dice format. Please use the format like 2d6.\n"
+
+
+def test_roll_returns_list():
+    """Tests that roll() returns a list."""
+    result = roll(pairs=3, bones=6, weight=False)
+    assert isinstance(result, list)
 
 
 def test_roll_returns_correct_number_of_dice():
