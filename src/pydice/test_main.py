@@ -6,10 +6,12 @@ from .main import app, roll
 runner = CliRunner()
 
 
-def test_main_default():
+def test_main_default(mocker: MockerFixture):
     """Tests the main function with default arguments."""
+    mocker.patch("random.choices", return_value=[2])
     result = runner.invoke(app, ["1d6"])
     assert result.exit_code == 0
+    assert result.stdout == "2\n"
 
 
 def test_main_stdout():
