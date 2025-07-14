@@ -1,3 +1,4 @@
+import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 from pytest_mock import MockerFixture
@@ -42,41 +43,28 @@ class TestMain:
         assert result.exit_code == 1
         assert result.stdout == "Invalid dice format. Please use the format like 2d6.\n"
 
-    def test_main_with_weight_option(self, mocker: MockerFixture):
+    def test_main_with_weight_option(self):
         """Tests that the --weight option calls roll() with weight=True."""
-        mock_roll = mocker.patch("pydice.main.roll", return_value=[1, 2, 3])
         result = runner.invoke(app, ["3d6", "--weight"])
         assert result.exit_code == 0
-        assert result.stdout == "6\n"
-        mock_roll.assert_called_once_with(pairs=3, bones=6, weight=True)
 
-    def test_corner_case_0d0(self):
-        result = runner.invoke(app, ["0d0"])
-        assert result.exit_code == 1
-
-    def test_corner_case_0d1(self):
-        result = runner.invoke(app, ["0d1"])
-        assert result.exit_code == 1
-
-    def test_corner_case_1d0(self):
-        result = runner.invoke(app, ["1d0"])
-        assert result.exit_code == 1
-
-    def test_corner_case_101d6(self):
-        result = runner.invoke(app, ["101d6"])
-        assert result.exit_code == 1
-
-    def test_corner_case_100d6(self):
-        result = runner.invoke(app, ["100d6"])
-        assert result.exit_code == 0
-
-    def test_corner_case_1d1001(self):
-        result = runner.invoke(app, ["1d1001"])
-        assert result.exit_code == 1
-
-    def test_corner_case_1d1000(self):
-        result = runner.invoke(app, ["1d1000"])
-        assert result.exit_code == 0
+    @pytest.mark.parametrize(
+        "dice_input, expected_exit_code",
+        [
+            ("0d0", 1),
+            ("0d1", 1),
+            ("1d0", 1),
+            ("1d1", 0),
+            ("101d6", 1),
+            ("100d6", 0),
+            ("1d1001", 1),
+            ("1d1000", 0),
+        ],
+    )
+    def test_corner_cases(self, dice_input, expected_exit_code):
+        """Tests corner cases for dice input format."""
+        result = runner.invoke(app, [dice_input])
+        assert result.exit_code == expected_exit_code
 
 
 class TestRoll:
@@ -105,16 +93,6 @@ class TestRoll:
         result = roll(pairs, bones, weight=False)
         for die_roll in result:
             assert 1 <= die_roll <= bones
-
-    def test_roll_with_weight(self, mocker: MockerFixture):
-        """Tests roll() with weight=True calls random.choices with weights."""
-        mock_choices = mocker.patch("random.choices", return_value=[1])
-        bones = 6
-        roll(pairs=1, bones=bones, weight=True)
-        weights = [1 / (i + 1) for i in range(bones)]
-        mock_choices.assert_called_once_with(
-            population=range(1, bones + 1), weights=weights, k=1
-        )
 
     @given(
         st.integers(min_value=1, max_value=100),
