@@ -1,3 +1,5 @@
+from hypothesis import given
+from hypothesis import strategies as st
 from pytest_mock import MockerFixture
 from typer.testing import CliRunner
 
@@ -103,3 +105,13 @@ def test_corner_case_1d1001():
 def test_corner_case_1d1000():
     result = runner.invoke(app, ["1d1000"])
     assert result.exit_code == 0
+
+
+@given(
+    st.integers(min_value=1, max_value=100),
+    st.integers(min_value=1, max_value=1000),
+)
+def test_roll_property(pairs, bones):
+    result = roll(pairs, bones, weight=False)
+    assert len(result) == pairs
+    assert all(1 <= die_roll <= bones for die_roll in result)
