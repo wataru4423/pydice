@@ -94,6 +94,24 @@ class TestRoll:
         for die_roll in result:
             assert 1 <= die_roll <= bones
 
+    def test_weights_are_correctly_set_when_weighted(self, mocker: MockerFixture):
+        """
+        Tests that the entire weights list is correctly constructed when weight=True.
+        """
+        mock_choices = mocker.patch("pydice.main.random.choices")
+        bones = 6
+        roll(pairs=1, bones=bones, weight=True)
+
+        expected_weights = [1] * (bones - 1) + [3]
+        kwargs = mock_choices.call_args.kwargs
+
+        assert "weights" in kwargs
+        assert kwargs["weights"] == expected_weights
+
+
+class TestRollProperty:
+    """Test suite for property-based testing of the roll function."""
+
     @given(
         st.integers(min_value=1, max_value=100),
         st.integers(min_value=1, max_value=1000),
