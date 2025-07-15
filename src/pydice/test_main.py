@@ -31,6 +31,12 @@ class TestMain:
         assert result.exit_code == 0
         assert result.stdout == "1, 1\n"
 
+    def test_each_die_value_returned_a_dice(self):
+        """Tests that each die value is returned a die."""
+        result = runner.invoke(app, ["1d1", "--each"])
+        assert result.exit_code == 0
+        assert result.stdout == "1\n"
+
     def test_sum_value_returned(self):
         """Tests that sum value is returned."""
         result = runner.invoke(app, ["3d1"])
