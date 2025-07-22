@@ -12,6 +12,11 @@ runner = CliRunner()
 class TestMain:
     """Test suite for the main CLI application."""
 
+    def test_invoke(self):
+        """Tests launch application"""
+        result = runner.invoke(app)
+        assert result.exit_code == 0
+
     def test_main_default(self, mocker: MockerFixture):
         """Tests the main function with default arguments."""
         mocker.patch("random.choices", return_value=[2])
