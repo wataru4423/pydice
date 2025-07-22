@@ -36,8 +36,16 @@ def main(
 
 
 def roll(pairs: int, bones: int, weight: bool) -> list[int]:
-    """
-    dice roll function
+    """Dice roll function
+
+    Args:
+        pairs (int): Number of dice
+        bones (int): Number of sides
+        weight (bool): Weighted dice
+
+
+    Returns:
+        list[int]: Value of each die
     """
     die = list(range(1, bones + 1))
     if weight:
