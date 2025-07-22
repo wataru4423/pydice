@@ -9,11 +9,11 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    dice: Annotated[str, typer.Argument(help="Dice to roll, e.g. 2d6")] = "1d6",
-    weight: Annotated[bool, typer.Option(help="Weighted dice")] = False,
-    each: Annotated[bool, typer.Option(help="Return each die value")] = False,
+    dice: Annotated[str, typer.Argument(help="Dice to roll, e.g. 2d6.")] = "1d6",
+    weight: Annotated[bool, typer.Option(help="Weighted dice.")] = False,
+    each: Annotated[bool, typer.Option(help="Return each die value.")] = False,
 ):
-    """Dice roll application.\n
+    """Dice roll application\n
     Default: to roll a 6-sided dice and return sum value.\n
     Max: 100d1000.\n
     First number: Number of dice.\n
