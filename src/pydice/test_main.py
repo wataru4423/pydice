@@ -122,14 +122,14 @@ class TestRoll:
         assert kwargs["weights"] == expected_weights
 
 
-class TestRollProperty:
+class TestDiceProperty:
     """Test suite for property-based testing of the roll function."""
 
     @given(
         st.integers(min_value=1, max_value=100),
         st.integers(min_value=1, max_value=1000),
     )
-    def test_roll_property(self, pairs, bones):
+    def test_dice_property(self, pairs, bones):
         """Property-based test for the roll function."""
         result = roll(pairs, bones, weight=False)
         assert len(result) == pairs
