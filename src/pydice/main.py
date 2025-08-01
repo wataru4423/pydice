@@ -11,7 +11,7 @@ app = typer.Typer()
 
 def version_callback(value: bool):
     if value:
-        print(f"pydice: {__version__}")
+        print(f"pydice {__version__}")
         raise typer.Exit()
 
 
