@@ -26,7 +26,7 @@ def main(
             "--version",
             callback=version_callback,
             is_eager=True,
-            help="Show the version and exit.",
+            help="Show the version.",
         ),
     ] = None,
 ) -> None:
