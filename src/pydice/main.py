@@ -1,10 +1,18 @@
+import importlib.metadata
 import random
 import re
-from typing import Annotated
+from typing import Annotated, Optional
 
 import typer
 
+__version__ = importlib.metadata.version("pydice")
 app = typer.Typer()
+
+
+def version_callback(value: bool):
+    if value:
+        print(f"pydice: {__version__}")
+        raise typer.Exit()
 
 
 @app.command()
@@ -12,13 +20,22 @@ def main(
     dice: Annotated[str, typer.Argument(help="Dice to roll, e.g. 2d6.")] = "1d6",
     weight: Annotated[bool, typer.Option(help="Weighted dice.")] = False,
     each: Annotated[bool, typer.Option(help="Return each die value.")] = False,
+    version: Annotated[
+        Optional[bool],
+        typer.Option(
+            "--version",
+            callback=version_callback,
+            is_eager=True,
+            help="Show the version and exit.",
+        ),
+    ] = None,
 ):
-    """Dice roll application\n
-    Default: to roll a 6-sided dice and return sum value.\n
-    Max: 100d1000.\n
-    First number: Number of dice.\n
-    Second number: Number of sides.\n
-    If --weight is set, last number will be weighted to 3.\n
+    """Dice roll application
+    Default: to roll a 6-sided dice and return sum value.
+    Max: 100d1000.
+    First number: Number of dice.
+    Second number: Number of sides.
+    If --weight is set, last number will be weighted to 3.
     If --each is set, each die value will be returned instead of the sum value.
     """
 
