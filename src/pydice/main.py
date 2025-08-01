@@ -29,7 +29,7 @@ def main(
             help="Show the version and exit.",
         ),
     ] = None,
-):
+) -> None:
     """Dice roll application
     Default: to roll a 6-sided dice and return sum value.
     Max: 100d1000.
