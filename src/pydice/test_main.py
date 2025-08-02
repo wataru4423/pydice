@@ -17,11 +17,12 @@ class TestMain:
         result = runner.invoke(app)
         assert result.exit_code == 0
 
-    def test_version_option(self):
+    def test_version_option(self, mocker: MockerFixture):
         """Tests the --version option."""
+        mocker.patch("pydice.main.__version__", "0.3.0")
         result = runner.invoke(app, ["--version"])
         assert result.exit_code == 0
-        assert "pydice 0.3.0" in result.stdout
+        assert "pydice 0.3.0\n" == result.stdout
 
     def test_main_default(self, mocker: MockerFixture):
         """Tests the main function with default arguments."""
