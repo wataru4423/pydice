@@ -13,7 +13,7 @@ You can install `pydice` using uv:
 ```bash
 git clone https://github.com/wataru4423/pydice.git
 cd pydice
-uv install .
+uv tool install .
 ```
 
 ## Usage
@@ -77,7 +77,6 @@ To set up the project for development:
     ```bash
     uv sync
     ```
-    *(Note: You might need to define the `[project.optional-dependencies]` for `dev` in `pyproject.toml` to include `pytest`, `hypothesis`, etc.)*
 
 3.  Run the tests:
     ```bash
