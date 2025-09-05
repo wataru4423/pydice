@@ -15,3 +15,10 @@ pydice = "pydice.main:app"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "hypothesis>=6.138.14",
+    "pytest>=8.4.2",
+    "pytest-mock>=3.15.0",
+]
