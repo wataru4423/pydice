@@ -76,6 +76,8 @@ To set up the project for development:
 2.  Create a virtual environment and install the dependencies:
     ```bash
     uv sync
+    # Activating a virtual environment
+    source .venv/bin/activate
     ```
 
 3.  Run the tests:
