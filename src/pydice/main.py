@@ -30,13 +30,13 @@ def main(
         ),
     ] = None,
 ) -> None:
-    """Dice roll application
-    Default: to roll a 6-sided dice and return sum value.
-    Max: 100d1000.
-    First number: Number of dice.
-    Second number: Number of sides.
-    If --weight is set, last number will be weighted to 3.
-    If --each is set, each die value will be returned instead of the sum value.
+    """Dice roll application\n
+    Default: to roll a 6-sided dice and return sum value.\n
+    Max: 100d1000.\n
+    First number: Number of dice.\n
+    Second number: Number of sides.\n
+    If --weight is set, last number will be weighted to 3.\n
+    If --each is set, each die value will be returned instead of the sum value.\n
     """
 
     if not re.fullmatch(r"([1-9]\d?|100)[d]([1-9]\d{0,2}|1000)", dice):
