@@ -19,6 +19,7 @@ uv tool install .
 ## Usage
 
 The command is `pydice`. You can roll dice in the `NdM` format, where `N` is the number of dice and `M` is the number of sides.
+Max: 100d1000.
 
 ### Basic Roll
 
