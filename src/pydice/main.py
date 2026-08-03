@@ -8,6 +8,9 @@ import typer
 __version__ = importlib.metadata.version("pydice")
 app = typer.Typer()
 
+# Pre-compiled regex for dice format validation (1-100 dice, 1-1000 sides)
+DICE_PATTERN = re.compile(r"^(100|[1-9]\d?)[d](1000|[1-9]\d{0,2})$")
+
 
 def version_callback(value: bool):
     if value:
@@ -39,11 +42,10 @@ def main(
     If --each is set, each die value will be returned instead of the sum value.\n
     """
 
-    if not re.fullmatch(r"([1-9]\d?|100)[d]([1-9]\d{0,2}|1000)", dice):
+    if not DICE_PATTERN.fullmatch(dice):
         print("Invalid dice format. Use NdM (e.g., 2d6, 1d20). Max: 100d1000.")
         raise typer.Exit(code=1)
-    else:
-        pairs, bones = map(int, dice.split("d"))
+    pairs, bones = map(int, dice.split("d"))
 
     rolls = roll(pairs, bones, weight)
     if each:
@@ -64,12 +66,7 @@ def roll(pairs: int, bones: int, weight: bool) -> list[int]:
     Returns:
         list[int]: Value of each die
     """
-    die = list(range(1, bones + 1))
     if weight:
-        weights = [1] * bones
-        weights[-1] = 3
-        dice = random.choices(die, k=pairs, weights=weights)
-    else:
-        dice = random.choices(die, k=pairs)
-
-    return dice
+        weights = [1] * (bones - 1) + [3]
+        return random.choices(range(1, bones + 1), k=pairs, weights=weights)
+    return random.choices(range(1, bones + 1), k=pairs)
