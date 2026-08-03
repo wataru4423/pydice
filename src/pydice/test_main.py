@@ -59,7 +59,7 @@ class TestMain:
         """Tests error message when dice format is invalid."""
         result = runner.invoke(app, ["1D6"])
         assert result.exit_code == 1
-        assert result.stdout == "Invalid dice format. Please use the format like 2d6.\n"
+        assert result.stdout == "Invalid dice format. Use NdM (e.g., 2d6, 1d20). Max: 100d1000.\n"
 
     def test_main_with_weight_option(self):
         """Tests that the --weight option calls roll() with weight=True."""

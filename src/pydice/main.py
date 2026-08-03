@@ -43,7 +43,7 @@ def main(
     """
 
     if not DICE_PATTERN.fullmatch(dice):
-        print("Invalid dice format. Please use the format like 2d6.")
+        print("Invalid dice format. Use NdM (e.g., 2d6, 1d20). Max: 100d1000.")
         raise typer.Exit(code=1)
     pairs, bones = map(int, dice.split("d"))
 
