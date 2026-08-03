@@ -48,11 +48,27 @@ $ pydice 3d6 --each
 
 ### Weighted Dice
 
-Use the `--weight` option to give the highest number on the die a weight of 3, making it more likely to appear.
+Use the `--weight` option to give the highest number on the die a weight of 3, making it 3x more likely to appear than other numbers.
 
 ```bash
 $ pydice 1d20 --weight
 20
+```
+
+You can combine `--weight` with `--each` to see all rolls:
+
+```bash
+$ pydice 3d6 --weight --each
+6, 2, 6
+```
+
+### Edge Cases
+
+The maximum supported format is 100 dice with 1000 sides:
+
+```bash
+$ pydice 100d1000
+50234
 ```
 
 ### Get Version
@@ -85,3 +101,7 @@ To set up the project for development:
     ```bash
     pytest
     ```
+
+## Contributing
+
+Contributions are welcome! Feel free to open a pull request or report an issue.
