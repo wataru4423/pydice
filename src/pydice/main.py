@@ -40,7 +40,7 @@ def main(
     """
 
     if not re.fullmatch(r"([1-9]\d?|100)[d]([1-9]\d{0,2}|1000)", dice):
-        print("Invalid dice format. Please use the format like 2d6.")
+        print("Invalid dice format. Use NdM (e.g., 2d6, 1d20). Max: 100d1000.")
         raise typer.Exit(code=1)
     else:
         pairs, bones = map(int, dice.split("d"))
