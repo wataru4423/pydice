@@ -48,7 +48,6 @@ Run from the repository root.
 - Run tests: `uv run pytest` (or `pytest` inside the venv)
 - Run a single test: `uv run pytest src/pydice/test_main.py::TestRoll::test_roll_returns_list`
 - Run the CLI: `uv run pydice 2d6`
-- Run with verbose: `uv run pytest -v`
 
 ## Coding Conventions
 
