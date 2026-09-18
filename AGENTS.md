@@ -29,7 +29,7 @@ pyproject.toml     # project metadata, deps, scripts (pydice = pydice.main:app)
 README.md          # user-facing docs
 ```
 
-The public entrypoint is `pydice.main:app` (a `typer.Typer()` instance). All roll logic lives in `roll()` and is exercised directly by tests, separate from the CLI layer.
+The public entrypoint is `pydice.main:app` (a `typer.Typer()` instance). Roll logic lives in `roll()`, which is exercised directly by tests, separate from the CLI layer. Note that `roll()` is NOT a pure function: it calls `random.choices` and is therefore non-deterministic. Deterministic tests must patch `random.choices` (or `pydice.main.random.choices`) via `pytest-mock`.
 
 ## Development Setup
 
@@ -53,7 +53,7 @@ Run from the repository root.
 ## Coding Conventions
 
 - Follow the existing style: 4-space indentation, standard library imports first, then third-party (typer), then local.
-- Keep the CLI layer (`main`) thin; core logic belongs in pure, testable functions like `roll()`.
+- Keep the CLI layer (`main`) thin; core logic belongs in testable functions like `roll()`. Note `roll()` relies on `random.choices`, so it is non-deterministic rather than pure.
 - Use type annotations (e.g. `list[int]`, `Annotated[str, ...]`) as seen in `main.py`.
 - Dice format is validated by the pre-compiled `DICE_PATTERN` regex. Keep `1–100` dice and `1–1000` sides bounds in sync between the regex and any new validation.
 - Do not add inline or standalone code comments unless a comment is essential. The codebase is intentionally comment-free.
