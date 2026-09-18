@@ -75,7 +75,6 @@ Run from the repository root.
 
 - Use Conventional Commits (e.g. `fix:`, `feat:`, `docs:`, `test:`, `chore:`).
 - Keep commit messages focused and descriptive, matching the style of recent history (`fix: Improve error message for invalid dice format`).
-- Branch naming: feature branches follow `vibe/<short-slug>-<token>`; otherwise follow existing repo conventions.
 
 ## Pull Requests
 
