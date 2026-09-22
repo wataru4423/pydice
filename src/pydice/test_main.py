@@ -1,12 +1,17 @@
+from unittest.mock import patch
+
 import pytest
-from hypothesis import given
+from hypothesis import example, given
 from hypothesis import strategies as st
 from pytest_mock import MockerFixture
 from typer.testing import CliRunner
 
-from .main import app, roll
+from .main import app, roll, DICE_PATTERN
 
 runner = CliRunner()
+
+pairs_strategy = st.integers(min_value=1, max_value=100)
+bones_strategy = st.integers(min_value=1, max_value=1000)
 
 
 class TestMain:
@@ -130,14 +135,79 @@ class TestRoll:
 
 
 class TestDiceProperty:
-    """Test suite for property-based testing of the roll function."""
+    """Property-based tests for the roll function."""
 
-    @given(
-        st.integers(min_value=1, max_value=100),
-        st.integers(min_value=1, max_value=1000),
-    )
-    def test_dice_property(self, pairs, bones):
-        """Property-based test for the roll function."""
+    @given(pairs=pairs_strategy, bones=bones_strategy)
+    @example(pairs=1, bones=1)
+    @example(pairs=100, bones=1000)
+    def test_roll_returns_valid_dice(self, pairs, bones):
+        """roll() always returns `pairs` integers between 1 and `bones`."""
         result = roll(pairs, bones, weight=False)
         assert len(result) == pairs
         assert all(1 <= die_roll <= bones for die_roll in result)
+
+    @given(pairs=pairs_strategy, bones=bones_strategy)
+    @example(pairs=1, bones=1)
+    @example(pairs=100, bones=1000)
+    def test_weighted_roll_returns_valid_dice(self, pairs, bones):
+        """Weighted roll() also returns `pairs` integers between 1 and `bones`."""
+        result = roll(pairs, bones, weight=True)
+        assert len(result) == pairs
+        assert all(1 <= die_roll <= bones for die_roll in result)
+
+    @given(bones=bones_strategy)
+    @example(bones=1)
+    @example(bones=1000)
+    def test_weighted_roll_builds_expected_weights(self, bones):
+        """Weighted roll() weights every face 1x except the highest face at 3x."""
+        with patch("pydice.main.random.choices") as mock_choices:
+            roll(pairs=1, bones=bones, weight=True)
+        kwargs = mock_choices.call_args.kwargs
+        assert kwargs["weights"] == [1] * (bones - 1) + [3]
+        assert kwargs["k"] == 1
+
+    @given(pairs=pairs_strategy, bones=bones_strategy)
+    def test_unweighted_roll_passes_no_weights(self, pairs, bones):
+        """Unweighted roll() lets random.choices apply uniform weights."""
+        with patch("pydice.main.random.choices") as mock_choices:
+            roll(pairs=pairs, bones=bones, weight=False)
+        kwargs = mock_choices.call_args.kwargs
+        assert "weights" not in kwargs
+        assert "cum_weights" not in kwargs
+
+
+class TestCliProperty:
+    """Property-based tests for the CLI layer."""
+
+    @given(pairs=pairs_strategy, bones=bones_strategy)
+    @example(pairs=1, bones=1)
+    @example(pairs=100, bones=1000)
+    def test_sum_is_within_theoretical_bounds(self, pairs, bones):
+        """The printed sum lies between all-minimum and all-maximum rolls."""
+        result = runner.invoke(app, [f"{pairs}d{bones}"])
+        assert result.exit_code == 0
+        assert pairs <= int(result.stdout) <= pairs * bones
+
+    @given(pairs=pairs_strategy, bones=bones_strategy)
+    @example(pairs=1, bones=1)
+    @example(pairs=100, bones=1000)
+    def test_each_prints_valid_die_values(self, pairs, bones):
+        """--each prints exactly `pairs` comma-separated values within 1..bones."""
+        result = runner.invoke(app, [f"{pairs}d{bones}", "--each"])
+        assert result.exit_code == 0
+        values = [int(value) for value in result.stdout.strip().split(", ")]
+        assert len(values) == pairs
+        assert all(1 <= value <= bones for value in values)
+
+    @given(
+        dice_input=st.text(min_size=1, max_size=10).filter(
+            lambda text: not text.startswith("-") and not DICE_PATTERN.fullmatch(text)
+        )
+    )
+    def test_invalid_dice_input_always_fails(self, dice_input):
+        """Any input outside the NdM format exits with status code 1."""
+        result = runner.invoke(app, [dice_input])
+        assert result.exit_code == 1
+        assert result.stdout == (
+            "Invalid dice format. Use NdM (e.g., 2d6, 1d20). Max: 100d1000.\n"
+        )
