@@ -50,7 +50,7 @@ Pydice is a CLI tool that simulates rolling dice. Users specify dice in the `NdM
 
 ### NFR-2: Interface Consistency
 
-- All roll logic SHALL live in a pure, testable function (`roll()`) separate from the CLI layer.
+- All roll logic SHALL live in a testable function (`roll()`) separate from the CLI layer.
 - The dice format bounds (1–100 dice, 1–1000 sides) SHALL be kept in sync between the validation regex (`DICE_PATTERN`) and any future validation logic.
 
 ### NFR-3: Testability
